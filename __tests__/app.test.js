@@ -1,4 +1,5 @@
 import { locationIqData } from '../data/locationiq-data.js';
+import { formatLocationIqData } from '../lib/munge-utils.js';
 
 describe('API Data Munging', () => {
 
