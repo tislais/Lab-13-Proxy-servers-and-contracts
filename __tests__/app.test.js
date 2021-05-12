@@ -1,31 +1,23 @@
-import app from '../lib/app.js';
-import supertest from 'supertest';
+import { locationIqData } from '../data/locationiq-data.js';
 
-const request = supertest(app);
+describe('API Data Munging', () => {
 
-describe('API Routes', () => {
+  const expectedLocationIqData = {
+    'formatted_query': 'Portland, Multnomah County, Oregon, USA',
+    'latitude': '45.5202471',
+    'longitude': '-122.6741949'
+  };
 
-  // If a GET request is made to /api/cats, does:
-  // 1) the server respond with status of 200
-  // 2) the body match the expected API data?
-  it('GET /api/cats', async () => {
-    // act - make the request
-    const response = await request.get('/api/cats');
+  it('munges movie data', async () => {
+    // arrange
+    // expected is in variable above
+    // movieData is imported from file
 
-    // was response OK (200)?
-    expect(response.status).toBe(200);
+    // act 
+    const output = formatLocationIqData(locationIqData);
 
-    // did it return the data we expected?
-    expect(response.body).toEqual(expectedCats);
-
+    // assert
+    expect(output).toEqual(expectedLocationIqData);
   });
 
-  // If a GET request is made to /api/cats/:id, does:
-  // 1) the server respond with status of 200
-  // 2) the body match the expected API data for the cat with that id?
-  test('GET /api/cats/:id', async () => {
-    const response = await request.get('/api/cats/2');
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual(expectedCats[1]);
-  });
 });
