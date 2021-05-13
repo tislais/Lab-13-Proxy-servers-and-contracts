@@ -1,5 +1,6 @@
 import { locationIqData } from '../data/locationiq-data.js';
 import { weatherBitData } from '../data/weatherbit-data.js';
+import { yelpData } from '../data/yelp-data.js';
 import { formatLocationIqData } from '../lib/munge-utils.js';
 import { formatWeatherBitData } from '../lib/munge-utils.js';
 import { formatYelpData } from '../lib/munge-utils.js';
@@ -23,6 +24,14 @@ describe('API Data Munging', () => {
     }
   ];
 
+  const expectedYelpData = {
+    'name': 'Luc Lac',
+    'image_url': 'https://s3-media1.fl.yelpcdn.com/bphoto/azr6sD6VeJbdaiO2aKvSsw/o.jpg',
+    'url': 'https://www.yelp.com/biz/luc-lac-portland-7?adjust_creative=1qFFdrJ3g3elqBsC-Mk8XA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=1qFFdrJ3g3elqBsC-Mk8XA',
+    'rating': 4.0,
+    'price': '$$'
+  };
+
   it('munges LocationIq data', async () => {
     // arrange
     // expected is in variable above
@@ -35,7 +44,7 @@ describe('API Data Munging', () => {
     expect(output).toEqual(expectedLocationIqData);
   });
 
-  it.only('munges WeatherBit data', async () => {
+  it('munges WeatherBit data', async () => {
     // arrange
     // expected is in variable above
     // movieData is imported from file
