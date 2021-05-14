@@ -65,7 +65,7 @@ describe('API Data Munging', () => {
     const output = formatYelpData(yelpData);
 
     // assert
-    expect(output).toEqual(expectedYelpData);
+    expect(output[0]).toEqual(expectedYelpData);
   });
 
 });
