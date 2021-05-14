@@ -1,116 +1,71 @@
-import app from '../lib/app.js';
-import supertest from 'supertest';
-import client from '../lib/client.js';
-import { execSync } from 'child_process';
+import { locationIqData } from '../data/locationiq-data.js';
+import { weatherBitData } from '../data/weatherbit-data.js';
+import { yelpData } from '../data/yelp-data.js';
+import { formatLocationIqData } from '../lib/munge-utils.js';
+import { formatWeatherBitData } from '../lib/munge-utils.js';
+import { formatYelpData } from '../lib/munge-utils.js';
 
-const request = supertest(app);
+describe('API Data Munging', () => {
 
-describe('API Routes', () => {
+  const expectedLocationIqData = {
+    'formatted_query': 'Portland, Multnomah County, Oregon, USA',
+    'latitude': '45.5202471',
+    'longitude': '-122.6741949'
+  };
 
-  beforeAll(() => {
-    execSync('npm run setup-db');
-  });
-
-  afterAll(async () => {
-    return client.end();
-  });
-
-  const expectedCats = [
+  const expectedWeatherBitData = [
     {
-      id: expect.any(Number),
-      name: 'Felix',
-      type: 'Tuxedo',
-      url: 'cats/felix.png',
-      year: 1892,
-      lives: 3,
-      isSidekick: false
+      'forecast': 'Broken clouds',
+      'time': '2021-05-12'
     },
     {
-      id: expect.any(Number),
-      name: 'Garfield',
-      type: 'Orange Tabby',
-      url: 'cats/garfield.jpeg',
-      year: 1978,
-      lives: 7,
-      isSidekick: false
-    },
-    {
-      id: expect.any(Number),
-      name: 'Duchess',
-      type: 'Angora',
-      url: 'cats/duchess.jpeg',
-      year: 1970,
-      lives: 9,
-      isSidekick: false
-    },
-    {
-      id: expect.any(Number),
-      name: 'Stimpy',
-      type: 'Manx',
-      url: 'cats/stimpy.jpeg',
-      year: 1990,
-      lives: 1,
-      isSidekick: true
-    },
-    {
-      id: expect.any(Number),
-      name: 'Sylvester',
-      type: 'Tuxedo',
-      url: 'cats/sylvester.jpeg',
-      year: 1945,
-      lives: 1,
-      isSidekick: true
-    },
-    {
-      id: expect.any(Number),
-      name: 'Tigger',
-      type: 'Orange Tabby',
-      url: 'cats/tigger.jpeg',
-      year: 1928,
-      lives: 8,
-      isSidekick: false
-    },
-    {
-      id: expect.any(Number),
-      name: 'Hello Kitty',
-      type: 'Angora',
-      url: 'cats/hello-kitty.jpeg',
-      year: 1974,
-      lives: 9,
-      isSidekick: false
-    },
-    {
-      id: expect.any(Number),
-      name: 'Hobbs',
-      type: 'Orange Tabby',
-      url: 'cats/hobbs.jpeg',
-      year: 1985,
-      lives: 6,
-      isSidekick: true
+      'forecast': 'Few clouds',
+      'time': '2021-05-13'
     }
   ];
 
-  // If a GET request is made to /api/cats, does:
-  // 1) the server respond with status of 200
-  // 2) the body match the expected API data?
-  it('GET /api/cats', async () => {
-    // act - make the request
-    const response = await request.get('/api/cats');
+  const expectedYelpData = {
+    'name': 'Luc Lac',
+    'image_url': 'https://s3-media1.fl.yelpcdn.com/bphoto/azr6sD6VeJbdaiO2aKvSsw/o.jpg',
+    'url': 'https://www.yelp.com/biz/luc-lac-portland-7?adjust_creative=1qFFdrJ3g3elqBsC-Mk8XA&utm_campaign=yelp_api_v3&utm_medium=api_v3_business_search&utm_source=1qFFdrJ3g3elqBsC-Mk8XA',
+    'rating': 4.0,
+    'price': '$$'
+  };
 
-    // was response OK (200)?
-    expect(response.status).toBe(200);
+  it('munges LocationIq data', async () => {
+    // arrange
+    // expected is in variable above
+    // movieData is imported from file
 
-    // did it return the data we expected?
-    expect(response.body).toEqual(expectedCats);
+    // act 
+    const output = formatLocationIqData(locationIqData);
 
+    // assert
+    expect(output).toEqual(expectedLocationIqData);
   });
 
-  // If a GET request is made to /api/cats/:id, does:
-  // 1) the server respond with status of 200
-  // 2) the body match the expected API data for the cat with that id?
-  test('GET /api/cats/:id', async () => {
-    const response = await request.get('/api/cats/2');
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual(expectedCats[1]);
+  it('munges WeatherBit data', async () => {
+    // arrange
+    // expected is in variable above
+    // movieData is imported from file
+
+    // act 
+    const output = formatWeatherBitData(weatherBitData);
+
+    // assert
+    expect(output).toEqual(expectedWeatherBitData);
   });
+
+  it('munges Yelp data', async () => {
+    // arrange
+    // expected is in variable above
+    // movieData is imported from file
+
+    // act 
+    const output = formatYelpData(yelpData);
+
+    // assert
+    expect(output[0]).toEqual(expectedYelpData);
+  });
+
 });
