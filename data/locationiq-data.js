@@ -189,4 +189,4 @@ export const locationIqData = [
     'importance': 0.47242196006679904,
     'icon': 'https://locationiq.org/static/images/mapicons/poi_boundary_administrative.p.20.png'
   }
-]
+];
